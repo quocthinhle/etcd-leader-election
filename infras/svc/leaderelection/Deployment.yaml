@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: svc-leaderelection-v2-deployment
+  namespace: svc-workload
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: svc-leaderelection-v2
+  template:
+    metadata:
+      labels:
+        app: svc-leaderelection-v2
+    spec:
+      containers:
+      - name: svc-leaderelection-v2
+        image: lequocthinh12/go-leader-election:4
+        env:
+        - name: ETCD_HOST
+          value: etcd.etcd.svc.cluster.local:2379
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name

@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: etcd-external-load-balancer
+  namespace: etcd
+spec:
+  type: LoadBalancer
+  selector:
+    app: etcd
+  publishNotReadyAddresses: false
+  ports:
+  - port: 80
+    targetPort: 2379

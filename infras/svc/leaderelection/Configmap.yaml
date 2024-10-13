@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: svc-leaderelection-v2-cm
+  namespace: svc-workload
+data:
+  ETCD_HOST: etcd.etcd.svc.cluster.local:2379
