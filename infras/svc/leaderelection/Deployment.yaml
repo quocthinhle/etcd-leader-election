@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: svc-leaderelection-v2
-        image: lequocthinh12/go-leader-election:4
+        image: lequocthinh12/go-leader-election:8
         env:
         - name: ETCD_HOST
           value: etcd.etcd.svc.cluster.local:2379

@@ -9,14 +9,14 @@ import (
 )
 
 type Election struct {
-	id  string
-	cli *clientv3.Client
+	candidateId string
+	cli         *clientv3.Client
 }
 
 func NewElection(cli *clientv3.Client, id string) *Election {
 	return &Election{
-		id:  id,
-		cli: cli,
+		candidateId: id,
+		cli:         cli,
 	}
 }
 
@@ -26,15 +26,25 @@ func (e *Election) ElectLeader() error {
 		return err
 	}
 
-	election := concurrency.NewElection(session, "/leader-election/")
+	election := concurrency.NewElection(session, "/leader-election")
 
-	fmt.Println("Im trying to be the leader")
-
-	if err := election.Campaign(context.Background(), e.id); err != nil {
+	node, err := election.Leader(context.Background())
+	if err != nil {
 		return err
 	}
 
-	fmt.Println("I am the leader now")
+	currentLeader := string(node.Kvs[0].Value)
+	if currentLeader == e.candidateId {
+		// Resign
+	} else {
+		fmt.Println("Current leader is: ", currentLeader)
+	}
+
+	if err := election.Campaign(context.Background(), e.candidateId); err != nil {
+		return err
+	}
+
+	fmt.Println("I am the leader now with key: ", string(node.Kvs[0].Value))
 
 	return nil
 }
